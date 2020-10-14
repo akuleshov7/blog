@@ -1,1 +1,41 @@
-theme: jekyll-theme-cayman
+title: Personal blog
+email: andrewkuleshov7@gmail.com
+description: >
+  My blog
+baseurl: ""
+url: "https://akuleshov7.github.io/"
+twitter_username: test
+github_username: akuleshov7
+markdown: kramdown
+author:
+  name: "akuleshov7"
+  email: andreykuleshov7@gmail.com
+encoding: utf-8
+timezone: Europe/Moscow
+permalink: :year-:month-:day-:title.html
+exclude:
+  - README.md
+  - Gemfile.lock
+  - Gemfile
+  - Rakefile
+  - LICENSE.txt
+  - id_rsa.enc
+
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
+  - jekyll-sitemap
+
+paginate: 8
+paginate_path: "p/:num"
+excerpt_separator: <!--more-->
+
+feed:
+  title: akuleshov7.github.io
+  subtitle: Personal blog of akuleshov7
+  path: rss.xml
+
+sass:
+  style: compressed
+  deploy_style: compressed
+  compile_in_place: false
