@@ -1,55 +1,95 @@
 ---
 layout: default
+comments: true
 ---
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/css/icons.css"/>
 
 <article itemscope="" itemtype="http://schema.org/BlogPosting">
-  <h1 itemprop="name headline mainEntityOfPage">{{ page.title }}</h1>
-  <ul class="subline">
-    <li>
-      <time itemprop="datePublished" datetime="{{ page.date | date_to_xmlschema }}">
-        {{ page.date | date_to_string }}
-      </time>
-    </li>
+    <h1 itemprop="name headline mainEntityOfPage">{{ page.title }}</h1>
+    <ul class="subline">
+        <li>
+            <time itemprop="datePublished" datetime="{{ page.date | date_to_xmlschema }}">
+                {{ page.date | date_to_string }}
+            </time>
+        </li>
 
-    <li>
-      <time itemprop="author">
-        <a href="https://github.com/{{ page.author }}">@{{ page.author }}</a>
-      </time>
-    </li>
+        <li>
+            <time itemprop="author">
+                <a href="https://github.com/{{ page.author }}">@{{ page.author }}</a>
+            </time>
+        </li>
 
-    <li class="unprintable">
-      <a href="{{ site.url }}{{ page.url }}#disqus_thread" itemprop="discussionUrl">
-        Comments
-      </a><i class='fa fa-comments'></i>
-    </li>
-  </ul>
+        <li>
+            {% capture words %}
+            {{ content | number_of_words | minus: 180 }}
+            {% endcapture %}
+            {% unless words contains '-' %}
+            {{ words | plus: 180 | divided_by: 180 | append: ' minutes to read' }}
+            {% endunless %}
+        </li>
 
-  {{ content }}
+        <li>
+            {{ content | number_of_words | append: ' words' }}
+        </li>
 
+        <li class="unprintable">
+            <a href="{{ site.url }}{{ page.url }}#disqus_thread" itemprop="discussionUrl">
+                Comments
+            </a>
+            <i class='fa fa-comments'></i>
+        </li>
+    </ul>
 
-  <div class="disqus" role="complementary">
-    <div id="disqus_thread" class="disqus-thread"></div>
-    <script>
-      var disqus_config = function () {
-        this.page.url = document.location.href.split('?')[0].split('#')[0];
-        this.page.identifier = this.page.url;
-      };
-      (function() {
-        var d = document, s = d.createElement('script');
-        s.src = '//https-akuleshov7-github-io-blog.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-      })();
-    </script>
-    <noscript>
-      <div>
-        <p class="red">
-          JavaScript is disabled in your browser,
-          that's why you can't see comments under this post.
-        </p>
-      </div>
-    </noscript>
-  </div>
+    {{ content }}
+
+    <div class="disqus" role="complementary">
+        <div id="disqus_thread"></div>
+        <script>
+          var disqus_config = function () {
+          this.page.url = document.location.href.split('?')[0].split('#')[0];
+          this.page.identifier = this.page.url;
+          };
+          (function() {
+          var d = document, s = d.createElement('script');
+          s.src = 'https://akuleshov7-com.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+        </script>
+
+        <noscript>
+            <div>
+                <p class="red">
+                    JavaScript is disabled in your browser,
+                    that's why you can't see comments under this post.
+                </p>
+            </div>
+        </noscript>
+    </div>
+
+    <!--
+      <div class="disqus" role="complementary">
+        <div id="disqus_thread" class="disqus-thread"></div>
+        <script>
+          var disqus_config = function () {
+            this.page.url = document.location.href.split('?')[0].split('#')[0];
+            this.page.identifier = this.page.url;
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            s.src = '//https-akuleshov7-github-io-blog.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+        <noscript>
+          <div>
+            <p class="red">
+              JavaScript is disabled in your browser,
+              that's why you can't see comments under this post.
+            </p>
+          </div>
+        </noscript>
+      </div>-->
 </article>
