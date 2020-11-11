@@ -4,6 +4,7 @@ description: >
   Andrey Kuleshov's blog
 name: yegor256.com
 url: https://www.akuleshov7.com
+baseurl: "/"
 twitter_username: test
 github_username: akuleshov7
 markdown: kramdown
