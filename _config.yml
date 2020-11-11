@@ -2,8 +2,8 @@ title: Personal blog
 email: andrewkuleshov7@gmail.com
 description: >
   Andrey Kuleshov's blog
-baseurl: "https://akuleshov7.github.io/"
-url: "https://akuleshov7.github.io/"
+name: yegor256.com
+url: https://www.akuleshov7.com
 twitter_username: test
 github_username: akuleshov7
 markdown: kramdown
