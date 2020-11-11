@@ -31,32 +31,6 @@ keywords:
         </time>
       </li>
 
-      <li itemprop="wordCount">
-        {{ post.content | count_words }} words
-      </li>
-
-      <li>
-        {% capture time %}{{ post.content | reading_time }}{% endcapture %}
-        {% if time == '1' %}
-        a minute
-        {% else %}
-        {% case time %}
-        {% when '2' %}
-        two
-        {% when '3' %}
-        three
-        {% when '4' %}
-        four
-        {% when '5' %}
-        five
-        {% else %}
-        {{ time }}
-        {% endcase %}
-        minutes
-        {% endif %}
-        to read
-      </li>
-
       <li>
         <a href="{{ site.url }}{{ post.url }}#disqus_thread" itemprop="discussionUrl">Comments</a>
         <i class='fa fa-comments'></i>
