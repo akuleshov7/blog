@@ -1,12 +1,14 @@
 ---
 layout: default
-title: "akuleshov7 personal blog"
+title: "Andrey Kuleshov's personal blog"
 description: |
   Some description
 keywords:
   - kotlin
   - diktat
 ---
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/css/icons.css"/>
 
 <article itemscope="" itemtype="http://schema.org/Blog">
 {% for post in paginator.posts %}
@@ -18,19 +20,49 @@ keywords:
     </h1>
     <ul class="subline">
       <li>
+        <time itemprop="datePublished" datetime="{{ post.date | date_to_xmlschema }}">
+          {{ post.date | date_to_string }}
+        </time>
+      </li>
+
+      <li>
         <time itemprop="author">
           <a href="https://github.com/{{ post.author }}">@{{ post.author }}</a>
         </time>
       </li>
-      <li>
-        <time itemprop="datePublished dateModified" datetime="{{ post.date | date_to_xmlschema }}">
-          {{ post.date | date_to_string }}
-        </time>
+
+      <li itemprop="wordCount">
+        {{ post.content | count_words }} words
       </li>
+
       <li>
-        <a href="{{ site.url }}{{ post.url }}#disqus_thread" itemprop="discussionUrl">comments</a>
+        {% capture time %}{{ post.content | reading_time }}{% endcapture %}
+        {% if time == '1' %}
+        a minute
+        {% else %}
+        {% case time %}
+        {% when '2' %}
+        two
+        {% when '3' %}
+        three
+        {% when '4' %}
+        four
+        {% when '5' %}
+        five
+        {% else %}
+        {{ time }}
+        {% endcase %}
+        minutes
+        {% endif %}
+        to read
+      </li>
+
+      <li>
+        <a href="{{ site.url }}{{ post.url }}#disqus_thread" itemprop="discussionUrl">Comments</a>
+        <i class='fa fa-comments'></i>
       </li>
     </ul>
+
     <div class="main" itemprop="description">
       {{ post.excerpt }}
     </div>
@@ -41,32 +73,32 @@ keywords:
     </p>
   </div>
 {% endfor %}
-<!--
 
-  We have just a few posts, it's too early to do paginating. Uncomment
-  this blog when we have enough blog posts.
-
-  <div class="pagination">
-    <div class="left">
-      {% if paginator.previous_page %}
-        {% if paginator.previous_page == 1 %}
+  <div class="wrapper">
+    <footer>
+      <div class="pagination">
+        <div class="left">
+          {% if paginator.previous_page %}
+          {% if paginator.previous_page == 1 %}
           <a href="/"><i class="icon icon-fast-backward"></i></a>
-        {% else %}
+          {% else %}
           <a href="/p/{{ paginator.previous_page }}"><i class="icon icon-fast-backward"></i></a>
-        {% endif %}
-      {% else %}
-        <span class="mute"><i class="icon icon-fast-backward"></i></span>
-      {% endif %}
-    </div>
-    page {{ paginator.page }} of {{ paginator.total_pages }}
-    <div class="right">
-      {% if paginator.next_page %}
-        <a href="/p/{{ paginator.next_page }}"><i class="icon icon-fast-forward"></i></a>
-      {% else %}
-        <span class="mute"><i class="icon icon-fast-forward"></i></span>
-      {% endif %}
-    </div>
+          {% endif %}
+          {% else %}
+          <span class="mute"><i class="icon icon-fast-backward"></i></span>
+          {% endif %}
+        </div>
+        page {{ paginator.page }} of {{ paginator.total_pages }}
+        <div class="right">
+          {% if paginator.next_page %}
+          <a href="/p/{{ paginator.next_page }}"><i class="icon icon-fast-forward"></i></a>
+          {% else %}
+          <span class="mute"><i class="icon icon-fast-forward"></i></span>
+          {% endif %}
+        </div>
+      </div>
+    </footer>
   </div>
--->
+
 </article>
 

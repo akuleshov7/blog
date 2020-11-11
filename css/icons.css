@@ -1,0 +1,44 @@
+.fa {
+  padding: 0.5em;
+  font-size: 1.5em;
+  width: 2em;
+  text-align: center;
+  text-decoration: none;
+}
+
+.fa:hover {
+  opacity: 0.8;
+}
+
+.fa-instagram {
+  background: #6c4675;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
+.fa-github {
+  background: #131313;
+  color: white;
+}
+
+.fa-telegram {
+  background: #f0f8ff;
+  color: #007bb5;
+}
+
+.fa-comments {
+  padding: 0em;
+  margin: 0em;
+  font-size: 1.2em;
+  background: white;
+  color: black;
+}

@@ -1,41 +1,70 @@
 ---
 layout: default
 ---
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru"
-  itemscope="" itemtype="http://schema.org/WebPage">
-  <head>
+      itemscope="" itemtype="http://schema.org/WebPage">
+<head>
     <meta charset="utf-8"/>
-    <meta name="description" content="{{ page.description | xml_escape }}" />
-    <meta name="keywords" content="{{ page.keywords | join:', ' | xml_escape }}" />
+    <meta name="description" content="{{ page.description | xml_escape }}"/>
+    <meta name="keywords" content="{{ page.keywords | join:', ' | xml_escape }}"/>
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1"/>
     <link rel="shortcut icon" href="https://github.com/akuleshov7"/>
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/yegor256/tacit@gh-pages/tacit-css.min.css"/>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/yegor256/drops@gh-pages/drops.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css"/>
-  </head>
-  <body>
-    <section>
-      <header class="header" id="header">
+    <link rel="stylesheet" type="text/css" href="/css/icons.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/text_effects.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/header_block.css"/>
+
+    <style amp-custom="amp-custom">
+        body { font-family: 'Merriweather', 'Times New Roman', serif; padding: .5em; font-size: .9em; color: #202020; }
+        article { width: 70em; max-width: 100%; margin-left: auto; margin-right: auto; }
+        pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .9em; }
+        code { padding: 0 .3em; }
+    </style>
+</head>
+<body>
+<section>
+    <header class="header" id="header">
         <div>
-          <a href="/">
-            <img src="../static/img/author.png" class="logo" alt="Author photo"/>
+            <a href="/">
+                <img src="/static/img/author.png" class="logo" alt="Author photo"/>
             </a>
-          </div>
-          <nav>
+        </div>
+        <nav>
             <ul>
-              <li><a href="/" title="Home">Home</a></li>
-              <li><a href="/rss.xml" title="RSS">RSS</a></li>
+                <a href="https://twitter.com/akuleshov7" class="fa fa-twitter"></a>
+                <a href="https://github.com/akuleshov7" class="fa fa-github"></a>
+                <a href="https://www.t.me/AlexOrc7" class="fa fa-telegram"></a>
+                <a href="https://www.instagram.com/orchestr1" class="fa fa-instagram"></a>
+                <a href="https://www.linkedin.com/in/andrey-kuleshov-15707111b/" class="fa fa-linkedin"></a>
             </ul>
-          </nav>
-        </header>
-        {{ content }}
-        <footer>
-          Andrey Kuleshov, Russia, Moscow, 2020
-        </footer>
-      </section>
-      <script>var disqus_shortname = 'akuleshov7-blog';</script>
-      <script id="dsq-count-scr" src="//https-akuleshov7-github-io-blog/count.js" async="async"></script>
-    </body>
-  </html>
+        </nav>
+        <nav>
+            <ul>
+                <li><a href="/" title="Home" class="header home">Home</a></li>
+                <li><a href="/rss.xml" title="RSS" class="header home">RSS</a></li>
+                <li><a href="/about_me.html" title="About me" class="header home">About me</a></li>
+            </ul>
+        </nav>
+        <nav>
+            <p class="header description">
+                Personal blog about programming
+            </p>
+        </nav>
+
+    </header>
+    {{ content }}
+    <footer>
+        Andrey Kuleshov, Russia, Moscow, 2020
+    </footer>
+</section>
+<script>var disqus_shortname = 'akuleshov7-blog';</script>
+<script id="dsq-count-scr" src="//https-akuleshov7-github-io-blog/count.js" async="async"></script>
+</body>
+</html>

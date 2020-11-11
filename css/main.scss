@@ -8,19 +8,21 @@ footer {
 }
 
 section {
-	width: 40em;
+	width: 49em;
 }
 
 article {
-	border: 0;
+	border: 0.5;
 }
 
 .logo {
-	width: 64px;
-	height: 64px;
+	width: 7em;
+	height: 7em;
 }
 
 .subline {
+    font-size: .8em;
+    color: #555555;
 	margin-left: 0;
 	li {
 		margin-right: 1em;
@@ -28,3 +30,7 @@ article {
 		list-style: none;
 	}
 }
+
+
+
+

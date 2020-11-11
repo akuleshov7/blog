@@ -1,7 +1,7 @@
 title: Personal blog
 email: andrewkuleshov7@gmail.com
 description: >
-  My blog
+  Andrey Kuleshov's blog
 baseurl: ""
 url: "https://akuleshov7.github.io/"
 twitter_username: test
@@ -23,10 +23,13 @@ exclude:
 
 plugins:
   - jekyll-feed
+  - jekyll-bits
   - jekyll-paginate
+  - jekyll-plantuml
   - jekyll-sitemap
+  - jekyll-redirect-from
 
-paginate: 8
+paginate: 2
 paginate_path: "p/:num"
 excerpt_separator: <!--more-->
 
