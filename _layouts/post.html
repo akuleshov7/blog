@@ -2,8 +2,18 @@
 layout: default
 comments: true
 ---
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/css/icons.css"/>
+
+<head>
+    {% if page.image %}
+    <meta property="og:image" content="{{ page.image }}">
+    {% else %}
+    <meta property="og:image" content="/static/img/logo-1024.png">
+    {% endif %}
+</head>
 
 <article itemscope="" itemtype="http://schema.org/BlogPosting">
     <h1 itemprop="name headline mainEntityOfPage">{{ page.title }}</h1>
@@ -67,29 +77,4 @@ comments: true
             </div>
         </noscript>
     </div>
-
-    <!--
-      <div class="disqus" role="complementary">
-        <div id="disqus_thread" class="disqus-thread"></div>
-        <script>
-          var disqus_config = function () {
-            this.page.url = document.location.href.split('?')[0].split('#')[0];
-            this.page.identifier = this.page.url;
-          };
-          (function() {
-            var d = document, s = d.createElement('script');
-            s.src = '//https-akuleshov7-github-io-blog.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-          })();
-        </script>
-        <noscript>
-          <div>
-            <p class="red">
-              JavaScript is disabled in your browser,
-              that's why you can't see comments under this post.
-            </p>
-          </div>
-        </noscript>
-      </div>-->
 </article>

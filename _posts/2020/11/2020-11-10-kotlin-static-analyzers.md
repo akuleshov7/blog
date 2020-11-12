@@ -5,6 +5,7 @@ title: "Kotlin Linters: which should I choose?"
 author: akuleshov7
 description: |
   Kotlin Linters: which should I choose?
+image: /static/img/logo-1024.png
 keywords:
   - kotlin
   - static analyzers
