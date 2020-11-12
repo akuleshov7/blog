@@ -4,7 +4,7 @@ date: 2020-11-10
 title: "Kotlin Linters: which should I choose?"
 author: akuleshov7
 description: |
-  Kotlin Linters: which should I choose?
+  Brief comparison of existing opensource static analyzers. 
 image: /static/img/logo-1024.png
 keywords:
   - kotlin
