@@ -13,6 +13,7 @@ keywords:
 <img src="/static/img/logo-1024.png" width="200em">
 
 This article will make a brief comparison of existing **opensource** linters and static analyzers for Kotlin and introduce a new Kotlin linter (checker&fixer) called [diKTat](https://github.com/cqfn/diKTat).
+<!--more-->
 
 ## **Static analyzers for Kotlin**
 

@@ -24,6 +24,7 @@ We are developing [diktat](https://confluence-msc.rnd.huawei.com/display/DKT/diK
 and formatter, which is intended to be used as CI/CD tool that constantly checks quality of code that developers are adding
 to their projects. To provide a convenient way to run it for all developers we support run from CLI and are preparing to release
 a dedicated maven plugin to run diktat directly from maven.
+<!--more-->
 
 # Designing a plugin
 ## MOJO class

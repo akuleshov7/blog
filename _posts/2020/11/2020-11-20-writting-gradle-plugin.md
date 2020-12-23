@@ -14,6 +14,7 @@ keywords:
 ## Gradle plugin
 
 This article is describing our experience and problems that we have faced when we were creating Gradle plugin for our [diktat](https://github.com/cqfn/diKTat) project.
+<!--more-->
 
 ### Introduction
 Gradle is a build automation tool. It originated in Java ecosystem as an alternative to maven, but from the very beginning supported another approach.
