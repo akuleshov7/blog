@@ -204,7 +204,7 @@ class A {
 
 <details> 
   <summary>Answer </summary>
-  <b>The right answer is: b. And yes, Java is "pass-by-value" language (don't argue, just google)</b> Even if all objects are used with references, when you pass those objects to a method you will pass a copy of a reference.
+  <b>The right answer is: a. And yes, Java is "pass-by-value" language (don't argue, just google)</b> Even if all objects are used with references, when you pass those objects to a method you will pass a copy of a reference.
   For example, in following method the change to the argument `a` will not be visible outside of the method context: void foo(A a) { a = new A(); }. The second trick here is that String is a special type.
   Strings are immutable objects in Java. So when you change the object `a` - you do not affect the object `b`, because they have different references to string objects.
 </details>
