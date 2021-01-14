@@ -11,7 +11,6 @@ keywords:
   - static analyzers
 ---
 
-## Gradle plugin
 
 This article is describing our experience and problems that we have faced when we were creating Gradle plugin for our [diktat](https://github.com/cqfn/diKTat) project.
 <!--more-->

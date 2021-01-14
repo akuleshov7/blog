@@ -10,7 +10,6 @@ keywords:
   - puzzlers
 ---
 
-### Puzzlers: why do you need them?
 In a modern world the developer spends 80% of his time on Code Reading. So it is extremely important for him to
 read the code from the "whiteboard". Understanding of the code written by some other author can be more important than
 to write your own code. That's why on interviews to "good" companies or on Java certification exam you could be asked 

@@ -30,7 +30,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-redirect-from
 
-paginate: 2
+paginate: 3
 paginate_path: "p/:num"
 excerpt_separator: <!--more-->
 

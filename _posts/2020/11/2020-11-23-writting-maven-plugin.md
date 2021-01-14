@@ -11,7 +11,6 @@ keywords:
   - static analyzers
 ---
 
-# Introduction - about maven plugins
 If you are a Java developer you must be familiar with [maven](https://maven.apache.org) - a widely used Java build system.
 Maven has simple and reliable execution lifecycle: it runs several consecutive phases (like compile, test, package or deploy),
 and during each phase a set of plugins can be run, for example javac via maven-compiler-plugin during phase 'compile'.
@@ -26,14 +25,14 @@ to their projects. To provide a convenient way to run it for all developers we s
 a dedicated maven plugin to run diktat directly from maven.
 <!--more-->
 
-# Designing a plugin
-## MOJO class
+###  Designing a plugin
+###  MOJO class
 A main structural entity in maven plugin is a *MOJO*. MOJO stands for 'Maven POJO' or 'Maven plain old Java object', and it is
 a class that defines logic for a particular plugin goal. MOJO is a Java class annotated with `@Mojo` annotation, but since we
 are developing kotlin code style checker, we are going to implement our plugin in kotlin too. Kotlin code can be compiled in
 Java bytecode, so it won't be a problem.
 
-## Desired usage
+###  Desired usage
 When the plugin is ready, we want to invoke it like this:
 ```xml
 <build>
@@ -56,7 +55,7 @@ When the plugin is ready, we want to invoke it like this:
 ```
 With this config in `pom.xml` during `mvn verify` the goal `check` will be run.
 
-# Implementation
+###  Implementation
 Implementation of the plugin seems straightforward:
 ```kotlin
 @Mojo("check")
@@ -78,7 +77,7 @@ class DiktatCheckMojo: AbstractMojo() {
 The main point is the `execute` method which will be called during our MOJO invocation. Also, maven lets us capture parameters passed
 via configuration in pom.xml by simply annotating properties with `@Parameter`.
 
-## Sharing common logic among plugin goals
+###  Sharing common logic among plugin goals
 Note, that only classes annotated with `@Mojo` will be considered as mojos, not the classes extending `AbstractMojo`. It means
 that we can create a base abstract class extending `AbstractMojo` with common logic and configuration parameters and then
 create implementations of that base class for every particular plugin goal that we want.
@@ -117,7 +116,7 @@ class DiktatFixMojo : DiktatBaseMojo() {
 }
 ```
 
-# Instrumentation
+###  Instrumentation
 What is less straightforward is how to package our code as a maven plugin.
 
 You should create a maven plugin as a separate maven module in (possibly) multi-module maven project.
@@ -150,5 +149,5 @@ which has embedded dokka and provides `kotlin` extractor. After adding this plug
 ```
 we get a nice `plugin.xml` with goals and properties descriptions.
 
-# Last steps
+###  Last steps
 Now you can install a plugin to a local or remote maven repository and use it in your build!

@@ -66,28 +66,27 @@ keywords:
   <div class="wrapper">
     <footer>
       <div class="pagination">
-        <div class="left">
           {% if paginator.previous_page %}
           {% if paginator.previous_page == 1 %}
-          <a href="/"><i class="icon icon-fast-backward"></i></a>
+          <a href="/"><i class="fa fa-backward"></i></a>
           {% else %}
-          <a href="/p/{{ paginator.previous_page }}"><i class="icon icon-fast-backward"></i></a>
+          <a href="/p/{{ paginator.previous_page }}"><i class="fa fa-backward"></i></a>
           {% endif %}
           {% else %}
-          <span class="mute"><i class="icon icon-fast-backward"></i></span>
+          <span class="mute"><i class="fa fa-backward"></i></span>
           {% endif %}
-        </div>
-        page {{ paginator.page }} of {{ paginator.total_pages }}
-        <div class="right">
+
+          page {{ paginator.page }} of {{ paginator.total_pages }}
+
           {% if paginator.next_page %}
-          <a href="/p/{{ paginator.next_page }}"><i class="icon icon-fast-forward"></i></a>
+          <a href="/p/{{ paginator.next_page }}"><i class="fa fa-forward"></i></a>
           {% else %}
-          <span class="mute"><i class="icon icon-fast-forward"></i></span>
+          <span class="mute"><i class="fa fa-forward"></i></span>
           {% endif %}
-        </div>
       </div>
     </footer>
   </div>
+
 
 </article>
 
