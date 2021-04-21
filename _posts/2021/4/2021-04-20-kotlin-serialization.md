@@ -1,209 +1,208 @@
 ---
 layout: post
-date: 2020-12-23
-title: "Tricky Java puzzlers (part1)"
+date: 2021-04-20
+title: "Writing our own compiler plugin for serialization using Kotlin"
 author: akuleshov7
 description: |
-  These Java puzzlers can be found everywhere: on interviews, Java certifications and even in your daily work.
+  How to create your own serializer using kotlinx.serilaization
 keywords:
-  - java
-  - puzzlers
+  - kotlin
+  - serialization
 ---
 
-In a modern world the developer spends 80% of his time on Code Reading. So it is extremely important for him to
-read the code from the "whiteboard". Understanding of the code written by some other author can be more important than
-to write your own code. That's why on interviews to "good" companies or on Java certification exam you could be asked 
-to read simple snippets of code and tell what is the code doing. Solving such puzzlers is also useful for your daily routine as
-this helps you to understand the code more quickly and refreshes your knowledge of core language specifics.
-And the last but not the least - finally it is fun and trains your brain! So I have collected such puzzlers for you: some of them were created by me,
-some of them were taken from interviews, and some were taken from the Java OCA exam. Enjoy it! Read the code below and 
-answer what is this code doing. 
-<!--more-->
+Serialization and deserialization - are two sides of the same mechanism for storing (persisting)
+of objects or sending these objects over the network. There are a lot of different formats used
+for serialization. In general they can be split into two main groups: 
+binary protocols ([pickle](https://docs.python.org/3/library/pickle.html), [protobuf](https://developers.google.com/protocol-buffers) and many other) 
+and protocols with a string representation like [json](https://en.wikipedia.org/wiki/JSON),
+[toml](https://toml.io/en/), [yaml](https://en.wikipedia.org/wiki/YAML),
+[csv](https://en.wikipedia.org/wiki/Comma-separated_values), e.t.c. We know a lot of different libraries for the serialization in Java,
+but in Kotlin it was decided to create a common framework for the serialization called [
+kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization). Let's have a look how this framework works and try to write our own serializer. 
 
-PS there is an outstanding book called "Java Puzzlers: Traps, Pitfalls, and Corner Cases" - I suggest to read it. 
+  
+### Kotlinx.serialization
+Let's start from the most important thing: from documentation!
+Actually kotlinx.serialization has [perfect huge guide](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/serialization-guide.md) about the serialization.
+But we will try to be short and practical. We will try to create a deserialization library for the deserialization of our map-like format.
+*Spoiler:* we will try to reimplement deserialization library for map-like format using kotlin compiler. Recently such functionality was implemented in [Properties](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-properties/kotlinx-serialization-properties/kotlinx.serialization.properties/-properties/index.html) library.
+All code that you will see in this post can be found in [github](https://github.com/akuleshov7/kotlinx-serialization-map)
 
-All examples below can be found in [git: akuleshov7](https://github.com/akuleshov7/small-interviews)
+### Let's start!
 
-### Puzzler #0
-Let's start with something easy. All of us know principles of OOP, right? Let's remember how inheritance works in Java.
-What will be printed by this code snippet? The answer is easy!
-```java
-class Parent {
-    int a = 0;
-    void foo() {
-        System.out.println(a);
-    }
-}
+Imagine that we have the following simple map-like format (similar to `json` or any othe serialization format, isn't it?):
+```text
+(a: (b: "a"; c:5.0); d: 6; e: "my string")
+```   
 
-class Child extends Parent {
-    int a = 1;
-    public static void main(String[] args) { new Child().foo(); }
-}
+I am pretty sure that everyone understands that we **do not like** to work with such input using map:
+```kotlin
+val myMap: Map<String, Any> = parse("(a: (b: "a"; c:5.0); d: 6; e: \"my string\")")
+// this string will not be converted to Int
+val bugNumberOne: Int? = myMap.get("e") as Int?
+// in this map there is no key "f" and we will get unexpectedly null, also we will need to do casting of a type
+val bugNumberTwo: String? = myMap.get("f")
+```
+
+At least because we would like compiler to check us and help us to prevent issues with
+incorrect types or incorrect keys. We would like to have a perfect data class where
+this input will be deserialized. We would like to have the following data structure:
+```kotlin
+@Serializable 
+data class MyInnerClass(
+    val a: String,
+    val b: Double
+) 
+
+@Serializable 
+data class MySerializationClass(
+    val a: MyInnerClass,
+    val b: Int,
+    val e: String
+)
 ```
  
-<details> 
-<summary>Answer</summary>
-<b>The right answer is: 0.</b> The only trick here is that in Java you are not able to inherit class (or so-called instance) properties.
-You can only hide them. So when you call `package-private` method `foo()` it will take the property from same scope where the method is declared.
-In our case it is the property from the instance of Parent class.
-</details>
+Let's modify a little bit the schema you can see in [kotlinx documentation](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/basic-serialization.md#basics). 
+We will do the following:
 
-### Puzzler #1
-Let's move to more complex examples and refresh your knowledge of both Inheritance and Polymorphism in Java.
-What will be printed? You can also answer to the side-questions that are asked in the comments for this code. 
-
-```java
-interface A {
-    default void foo() { System.out.print("A"); } // what is the default modifier used for?
-}
-
-class C {
-    public void foo() { System.out.print("C"); }
-}
-
-class B extends C implements A  {
-    public void foo() { System.out.print("B"); }
-
-    public static void main(String[] args) {
-        C c = new B();
-        c.foo();
-        A a = new B();
-        a.foo();
-    }
-}
+```text
++--------+ Parsing +-----+ Decoding +------------+  Deserialization +--------+
+| Input  | --(1)-->| Map | ---(2)-->| Primitives |  -----(3)---->   | Object |
++--------+         +-----+          +------------+                  +--------+   
 ```
-<details> 
-  <summary>Answer </summary>
-  <b>The right answer is: BB.</b>. This one can confuse you a little bit, because we are creating objects of type `B`, but referencing them with types `C` and `A`.
-  Anyway this is like Polymorphism works in Java. Object is stored in one type and can be referenced to with the other type. And all methods by the default in Java are "virtual".
-  This means that the overridden method `foo()` that is called for the object will be resolved using the sub-class and the overridden version of this method will be used.  
-  for this object  
-</details>
 
-### Puzzler #2
-Let's imagine that we are a compiler (sometimes it can be useful, especially when you are on white-board interviews). Will this code compile? What will be printed if it compiles?
-Child class implements two interfaces. Both of them have methods with the default implementation (imagine that you are a compiler for Java8). This code tests your knowledge of interfaces and type casting.
-```java
-interface Foo { default int foo() {return 1;} }
-interface Bar { default int foo() {return 2;} }
-class Child implements Foo, Bar {
-    // Will this compile? Both interfaces have this method with implementation.
-    public int foo() { return 0; }
-    public static void main(String[] args) {
-        // Creating a Child instance, but assigning to Object
-        Object childObject = new Child();
-        // Casting it to the interface Foo
-        Foo f = (Foo) childObject;
-        // It looks like we are casting one independent interface to another
-        Bar b = (Bar) f;
-        // What will be printed? Which method is called?
-        System.out.print(b.foo());
-        System.out.print(f.foo());
-    }
-}
+### Let's see some code
+Let's skip step **(1)** - parsing - as it is obvious how to parse our input to a map. 
+
+Imagine that we already have a map and move to the step **(2)**:
+```kotlin
+val innerMap = mapOf("b" to "a", "c" to 5.0)
+val resMap = mapOf("a" to innerMap, "d" to 6, "e" to "my string")
+// we would like to parse the resMap to MySerializationClass
+val obj = MapSerialization.decodeFromString<MySerializationClass>(resMap)
 ```
-<details> 
-  <summary>Answer </summary>
-  <b>The right answer is: it compiles and prints 00.</b>. Actually this case was very tricky for me when I got this on my OCA exam. 
-  The chain of castings is very confusing here. Let's see how it works. First, there is absolutely no problem that we implement two interfaces with the same default method, because 
-  in the sub-class we define the implementation of this method. Second, the casting works fine and even is not throwing aby exceptions. Even when we think that we
-  are casting non-related types `Foo` and `Bar`. This happens because Java sees that the instance of class `Child` can be referenced by both `Foo` and `Bar` types as it implements both interfaces.
-  And finally, 00 will be printed because the overridden version of method `foo()` is used (otherwise Java would not be able to resolve naming conflict).
-</details>
 
-### Puzzler #3
-And again we will think as a compiler. Will this code be compiled with Java8+? Also try to answer questions in the comments.
-
-```java
-public abstract interface TestInterface {
-    public abstract void foo();
-    public int a = 0;
-}
-
-class Test implements TestInterface {
-    public void foo() {}
-}
-
-class Main {
-    public static void main(String ... args) {
-        // there is no constructor Test1() - how will it work?
-        Test a = new Test();
-        Test b = new Test();
-	
-       // we are trying to access public property from interface - will it work?
-       System.out.println(a.a++); // println1
-       System.out.println(a.a++); // println2
-    }
+### AbstractDecoder
+The deserialization of primitives **(3)** will be done by the Koltin compiler, so we only need to do a step **(2)** and help the compiler
+to decode the map to primitives. To do this we need to implement `AbstractDecoder` from `kotlinx.serialization.encoding.AbstractDecoder`:
+```kotlin
+// Serialization API is still in Alpha stage, so we need explicitly confirm that we understand what we are doing with the following annotation:
+@OptIn(ExperimentalSerializationApi::class)
+class MapDecoder(
+    // our map that will be decoded
+    val map: Map<*, *>, 
+    // number of elements that are contained in the current data structure that we would like to deserialize
+    var elementsCount: Int = 0, 
+    // some  config that will be used in decoding process
+    val config: Config = Config.default 
+) : AbstractDecoder() {
+    private var elementIndex = 0
+    // ...
 }
 ```
 
-<details> 
-  <summary>Answer </summary>
-  <b>The right answer is: it will not be compiled.</b>. All these `abstract` keywords are ok for interface (in real life when you do not set them explicitly they are added by the compiler).
-   The problem appears on the line println1, because all properties in the interface are static final. And you will not be able to increment final variable.
-</details>
+### Iteration through complex nested objects
+We need to iterate through all objects including nested objects, to do this we need to implement `beginStructure()` method. 
+The iteration will go through all fields and nested structures declared in the data class `MySerializationClass` in the same order how all fields were declared.
 
-### Puzzler #4
-
-```java
-/**
- * Imagine that class Parent and class Child stay in different packages. Will this compile?
- * If yes - what will be printed?
- */
-
-package a;
-public class Parent {
-    protected void foo() {  System.out.println("parent"); }
-}
-
-package b;
-class Child extends a.Parent {
-    protected void foo() { System.out.println("child"); }
-    public static void main(String[] args) {
-        a.Parent test = new Child();
-        test.foo();
+```kotlin
+    // used to trigger the processing for structures (including nested)
+    // when we use this method we go throw nested (non-primitive) structures IN THE CLASS
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
+        // corner case at the beginning of the decoding
+        if (elementIndex == 0) {
+            // sanity check to valide that we have correct format of input
+            validateDecodedInput(descriptor, map)
+            return MapDecoder(map, descriptor.elementsCount)
+        } else {
+            // need to decrement element index, as unfortunately it was incremented in the iteration of `decodeElementIndex`
+            return when (val innerMap = map.values.elementAt(elementIndex - 1)) {
+                is Map<*, *> -> {
+                    validateDecodedInput(descriptor, innerMap)
+                    MapDecoder(innerMap, descriptor.elementsCount)
+                }
+                else -> throw MapDecodingException("Incorrect format of nested data provided." +
+                        " Expected map, but received: <$innerMap>")
+            }
+        }
     }
-}
+``` 
+
+`beginStructure()` - is an entry point for all non-trivial non-primitive values that will appear in the input.
+Pay attention that the `descriptor: SerialDescriptor` contains all information about the current structure (number of fields, names of fields, e.t.c)
+
+Also we will need to help the decoder to iterate through indexes and help to understand when the processing should be stopped. 
+For this we need to implement `decodeElementIndex()` function. It should return the **index** of the field from the class
+**where the value** from the input **should be inserted**. We need simply to do `descriptor.getElementIndex("fieldName")` for it.
+In case such field `fieldName` will be missing in our class then the method will return `UNKNOWN_NAME` (equals to -3)
+
+```
+    /**
+     * this method should be overridden to map the FIELD in your class to the VALUE from
+     * the input that you would like to inject into this field
+     */
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
+        if (elementIndex == map.size) return CompositeDecoder.DECODE_DONE
+
+        val fieldName = map.keys.elementAt(elementIndex).toString()
+
+        // index of the field from the class where we should inject our value
+        val fieldWhereValueShouldBeInjected =
+            descriptor.getElementIndex(map.keys.elementAt(elementIndex).toString())
+
+        if (fieldWhereValueShouldBeInjected == CompositeDecoder.UNKNOWN_NAME) {
+            if (config.isStrict) {
+                throw MapDecodingException(
+                    "Unknown property <$fieldName>." +
+                            " To ignore unknown properties use 'isStrict = false' in the Config for the MapDecoder"
+                )
+            }
+        }
+        elementIndex++
+
+        return fieldWhereValueShouldBeInjected
+    }
 ```
 
-<details> 
-  <summary>Answer </summary>
-  <b>Suddenly you will get a compiler error: foo() has protected access in a.Parent</b>. This will happen because even when you use `protected`
-   keyword you are not able to access this protected method in static methods of a sub-class, if this sub-class stays in the other package.
-   Remember that if everything stays in the same package `protected` modifier will work in the same way as default (package-private) modifier.
-</details>
-
-### Puzzler #5
-Let's remember how references work in Java. Is Java "pass-by-value" or "pass-by-reference" programming language? That will be not the only one trick here.
-```java
-class A {
-    private String value;
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    A(String val) {
-        this.value = val;
-    }
-
-    public static void main(String[] args) {
-        A a = new A("a");
-        A b = new A(a.getValue());
-        a.setValue("b");
-
-        System.out.println(b.getValue());
-    }
-}
+From the code you can see that we will stop the process when we have iterated through all values in the current structure:
+```
+   if (elementIndex == map.size) return CompositeDecoder.DECODE_DONE
 ```
 
-<details> 
-  <summary>Answer </summary>
-  <b>The right answer is: a. And yes, Java is "pass-by-value" language (don't argue, just google)</b> Even if all objects are used with references, when you pass those objects to a method you will pass a copy of a reference.
-  For example, in following method the change to the argument `a` will not be visible outside of the method context: void foo(A a) { a = new A(); }. The second trick here is that String is a special type.
-  Strings are immutable objects in Java. So when you change the object `a` - you do not affect the object `b`, because they have different references to string objects.
-</details>
+### decodeValue
+We should also override a special method `decodeValue` that is simply used to return the value that we will
+get using the `elementIndex` (incremented in `decodeElementIndex` method):
+```
+    override fun decodeValue(): Any {
+        val keyAtTheCurrentIndex = map.keys.elementAt(elementIndex - 1)
+        return map[keyAtTheCurrentIndex]!!
+    }
+```
+
+### How it will work?
+- We will iterate through all fields in our `MySerializationClass`,
+trigger `beginStructure()` for every complex structure we will find in our data class (for example `MyInnerClass`);
+- For each complex structure we will recursively create a new instance of `MapDecoder`;
+- In each new `MapDecoder` we will have a counter `elementIndex` that will be incremented in `decodeElementIndex()`;
+- `decodeElementIndex()` will return us the index of the field in data class where our value should be inserted to;
+- `decodeValue()` will calculate and return the value after decoding. This value will be assigned to the
+ corresponding field (that has the index returned by `decodeElementIndex()`)
+ 
+So from this string: `(a: (b: "a"; c:5.0); d: 6; e: "my string")` instead of map we can have a pretty data class:
+```
+@Serializable 
+data class MySerializationClass(
+    val a: MyInnerClass, // MyInnerClass("a", 5.0)
+    val b: Int, // 6
+    val e: String // "my string"
+)
+```
+
+So easy! Isn't it? Imagine how many hours you will have spent to implement this functionality without such awesome compiler framework.
+Slso it is very important that `kotlinx.serialization` will work with [Kotlin Native](https://kotlinlang.org/docs/native-overview.html), and not only with Kotlin JVM!
+
+### Sources
+Full version of the code can be found on [github](https://github.com/akuleshov7/kotlinx-serialization-map/blob/main/src/mapSerializationMain/kotlin/com/akuleshov7/kotlinx/serialization/map/decoders/MapDecoder.kt)
+Also many thanks to Kotlin community for outstanding kotlinx library and perfect documentation.
+
+Also have a look at my library that I have created for decoding of toml format: [github](https://github.com/akuleshov7/ktoml) 
