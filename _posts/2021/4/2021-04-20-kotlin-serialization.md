@@ -4,22 +4,23 @@ date: 2021-04-20
 title: "Writing our own compiler plugin for serialization using Kotlin"
 author: akuleshov7
 description: |
-  How to create your own serializer using kotlinx.serilaization
+  How to create your own serializer using kotlinx.serialization
 keywords:
   - kotlin
   - serialization
 ---
 
-Serialization and deserialization - are two sides of the same mechanism for storing (persisting)
+**Serialization** and **deserialization** - are two sides of the same mechanism for storing (persisting)
 of objects or sending these objects over the network. There are a lot of different formats used
 for serialization. In general they can be split into two main groups: 
 binary protocols ([pickle](https://docs.python.org/3/library/pickle.html), [protobuf](https://developers.google.com/protocol-buffers) and many other) 
 and protocols with a string representation like [json](https://en.wikipedia.org/wiki/JSON),
 [toml](https://toml.io/en/), [yaml](https://en.wikipedia.org/wiki/YAML),
 [csv](https://en.wikipedia.org/wiki/Comma-separated_values), e.t.c. We know a lot of different libraries for the serialization in Java,
-but in Kotlin it was decided to create a common framework for the serialization called [
-kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization). Let's have a look how this framework works and try to write our own serializer. 
-
+but in Kotlin it was decided to create a common framework for the serialization
+called [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization). 
+Let's have a look how this framework works and try to write our own serializer. 
+<!--more-->
   
 ### Kotlinx.serialization
 Let's start from the most important thing: from documentation!
