@@ -27,7 +27,8 @@ Let's start from the most important thing: from documentation!
 Actually kotlinx.serialization has [perfect huge guide](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/serialization-guide.md) about the serialization.
 But we will try to be short and practical. We will try to create a deserialization library for the deserialization of our map-like format.
 *Spoiler:* we will try to reimplement deserialization library for map-like format using kotlin compiler. Recently such functionality was implemented in [Properties](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-properties/kotlinx-serialization-properties/kotlinx.serialization.properties/-properties/index.html) library.
-All code that you will see in this post can be found in [github](https://github.com/akuleshov7/kotlinx-serialization-map)
+
+All code that you will see in this post can be found on [github](https://github.com/akuleshov7/kotlinx-serialization-map)
 
 ### Let's start!
 
@@ -199,11 +200,12 @@ data class MySerializationClass(
 )
 ```
 
-So easy! Isn't it? Imagine how many hours you will have spent to implement this functionality without such awesome compiler framework.
-Slso it is very important that `kotlinx.serialization` will work with [Kotlin Native](https://kotlinlang.org/docs/native-overview.html), and not only with Kotlin JVM!
+So easy! Isn't it? Imagine how many hours you will have spent to implement this functionality without such awesome compiler framework. 
+Also it is very important that `kotlinx.serialization` will work with [Kotlin Native](https://kotlinlang.org/docs/native-overview.html), and not only with Kotlin JVM!
 
 ### Sources
 Full version of the code can be found on [github](https://github.com/akuleshov7/kotlinx-serialization-map/blob/main/src/mapSerializationMain/kotlin/com/akuleshov7/kotlinx/serialization/map/decoders/MapDecoder.kt)
+
 Also many thanks to Kotlin community for outstanding kotlinx library and perfect documentation.
 
-Also have a look at my library that I have created for decoding of toml format: [github](https://github.com/akuleshov7/ktoml) 
+Also have a look at my library that I have created for deserialization of toml format: [github](https://github.com/akuleshov7/ktoml) 
