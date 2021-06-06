@@ -11,7 +11,7 @@ keywords:
 ---
 In this post we will briefly describe different Internal Representations provided by Kotlin compiler.
 Kotlin compiler requires several stages to parse and preprocess the code.
-It builds a simple `Abstract Syntax Tree (AST)` from the code and enriches it to a special extended AST, called `Program Structure Interface` [PSI](https://github.com/JetBrains/kotlin/tree/37813d9d82c5a5ff246dd479dd34f754e44d3305/compiler/psi/src/org/jetbrains/kotlin/psi)`.
+It builds a simple `Abstract Syntax Tree (AST)` from the code and enriches it to a special extended AST, called `Program Structure Interface` [PSI](https://github.com/JetBrains/kotlin/tree/37813d9d82c5a5ff246dd479dd34f754e44d3305/compiler/psi/src/org/jetbrains/kotlin/psi).
 PSI contains functionality capable of working not only with high-level syntactical features, but with particular language specifics.
 Put simply, in Kotlin, AST is a high-level interface used to work with nodes of the tree, whereas PSI is a more specific implementation. 
 
@@ -28,7 +28,7 @@ ASTNode[] getChildren(
 
 In its turn, AstNode interface is implemented in the forms of Composite and Leaf elements of the Tree. As suggested by their names, they differ in one main characteristic: Leaf elements are nodes which do not have children.
 
-<img src="/static/img/ast.png" width="200em">
+<img src="/static/img/ast.png" width="400em">
 
 Each node has its own type, represented by the common class `IElementType`, that has a special implementation for Kotlin in [KtNodeType](https://github.com/JetBrains/kotlin/blob/37813d9d82c5a5ff246dd479dd34f754e44d3305/compiler/psi/src/org/jetbrains/kotlin/KtNodeType.java). AST can be easily mutated, allowing for lightweight and simple automated code fixing. 
 
@@ -51,7 +51,8 @@ if  (a!= null   ) {}
 ```
 
 It will be represented by the following PSI tree:
-<img src="/static/img/ast-example.png" width="200em">
+
+<img src="/static/img/ast-example.png" width="400em">
 
 Starting from version 1.4, Kotlin now has a new representation layer - a new Intermediate Representation (IR).
 This new intermediate representation (also in a tree format) is designed to serve as a common representation for different compiler backends (JVM, JS or Native),
@@ -66,5 +67,9 @@ While currently FIR is still in the early stages of development, it will aid in 
 In the end we should also mention the `BindingContext` - it is the extra data collected by Kotlin compiler.
 This information contains all the required data relating to inferred types, type nullability, usages, calls, and so on.
 For example, using this information we can understand that the variable is nullable and null-checks are redundant.
+The following picture illustrates how BindingContext works:
 
-<img src="/static/img/binding-context.png" width="200em">
+<img src="/static/img/binding-context.png" width="400em">
+
+The New IR introduced in Kotlin 1.4 also containsthis information about usages and types. And FIR (Frontend IR) will extend this ideas and make Internal Representation of Kotlin code more user-friendly.
+
