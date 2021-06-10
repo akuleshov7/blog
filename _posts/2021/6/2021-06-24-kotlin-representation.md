@@ -12,6 +12,7 @@ keywords:
 
 In this post we will briefly describe different Internal Representations provided by Kotlin compiler.
 Kotlin compiler requires several stages to parse and preprocess the code. And the main thing that should be done by compiler to process the code is to build proper intermediate representation.
+<!--more-->
 Kotlin Compiler builds a simple `Abstract Syntax Tree (AST)` from the code and enriches it to a special extended AST, called `Program Structure Interface` [PSI](https://github.com/JetBrains/kotlin/tree/37813d9d82c5a5ff246dd479dd34f754e44d3305/compiler/psi/src/org/jetbrains/kotlin/psi).
 PSI contains functionality capable of working not only with high-level syntactical features, but with particular language specifics.
 Put simply, in Kotlin, AST is a high-level interface used to work with nodes of the tree, whereas PSI is a more specific implementation. 
